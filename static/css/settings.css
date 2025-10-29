@@ -24,29 +24,28 @@
 /* Body & Layout */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
     color: var(--text-primary);
     min-height: 100vh;
     padding: 2rem;
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1650px;
     margin: 0 auto;
     background: var(--bg-primary);
     border-radius: 16px;
-    box-shadow: var(--shadow-xl);
     overflow: hidden;
 }
 
 /* Header */
 .header {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-    color: white;
-    padding: 2rem;
-    text-align: center;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
 }
 
 .header h1 {
@@ -60,6 +59,8 @@ body {
     font-size: 1.1rem;
     font-weight: 400;
     opacity: 0.9;
+    background: linear-gradient(135deg,  #101010);
+    -webkit-background-clip: text;
 }
 
 /* Tabs */
@@ -188,12 +189,12 @@ body {
 }
 
 /* Search */
-.search-bar {
+.search-bar1 {
     position: relative;
     margin-bottom: 1.5rem;
 }
 
-.search-bar svg {
+.search-bar1 svg {
     position: absolute;
     left: 1rem;
     top: 50%;
@@ -201,7 +202,7 @@ body {
     color: #9ca3af;
 }
 
-.search-bar input {
+.search-bar1 input {
     width: 100%;
     padding: 0.875rem 1rem 0.875rem 3rem;
     border: 2px solid var(--border-color);
@@ -209,7 +210,7 @@ body {
     font-size: 0.95rem;
 }
 
-.search-bar input:focus {
+.search-bar1 input:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
@@ -396,4 +397,3 @@ textarea.form-control { min-height: 80px; }
     .tab-btn { width:100%; }
     .toast { left:1rem; right:1rem; bottom:1rem; }
 }
- 
