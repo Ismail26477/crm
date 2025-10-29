@@ -1,0 +1,148 @@
+{% extends 'index.html' %}
+{% block title %}Dashboard - CRM Pro{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customers.css') }}">
+
+<div class="container">
+    <!-- Header Section -->
+    <header class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Customers</h1>
+            <p class="page-subtitle">Manage your converted leads and customer relationships</p>
+        </div>
+        <button class="btn-primary" onclick="syncWonLeads()">
+            <span class="btn-icon">🔄</span>
+            Sync Won Leads
+        </button>
+    </header>
+
+    <!-- Stats Dashboard -->
+    <section class="stats-grid">
+        <div class="stat-card stat-primary">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+                <div class="stat-value" id="totalCustomers">0</div>
+                <div class="stat-label">Total Customers</div>
+            </div>
+            <div class="stat-trend positive">↗ +12% from last month</div>
+        </div>
+
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-content">
+                <div class="stat-value" id="vipCustomers">0</div>
+                <div class="stat-label">VIP Customers</div>
+            </div>
+            <div class="stat-trend positive">↗ +5% from last month</div>
+        </div>
+
+        <div class="stat-card stat-info">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+                <div class="stat-value" id="avgValue">$0</div>
+                <div class="stat-label">Avg Customer Value</div>
+            </div>
+            <div class="stat-trend positive">↗ +3% from last month</div>
+        </div>
+    </section>
+
+    <!-- Filters & Actions -->
+    <section class="controls-section">
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Search customers by name, email, company..."
+            >
+        </div>
+
+        <div class="filter-group">
+            <select id="priorityFilter" class="filter-select">
+                <option value="">All Priorities</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="VIP">VIP</option>
+            </select>
+
+            <select id="sourceFilter" class="filter-select">
+                <option value="">All Sources</option>
+                <option value="Website">Website</option>
+                <option value="Referral">Referral</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Email">Email</option>
+                <option value="Direct">Direct</option>
+            </select>
+
+            <button class="btn-secondary" onclick="exportToCSV()">
+                <span class="btn-icon">📥</span>
+                Export CSV
+            </button>
+        </div>
+    </section>
+
+    <!-- Customers Table -->
+    <section class="table-section">
+        <div class="table-header">
+            <h2 class="table-title">Customer List</h2>
+        </div>
+
+        <div class="table-container">
+            <table class="customers-table" id="customersTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>NAME</th>
+                        <th>NUMBER</th>
+                        <th>EMAIL</th>
+                        <th>CITY</th>
+                        <th>VALUE</th>
+                        <th>SOURCE</th>
+                        <th>STAGE</th>
+                        <th>PRIORITY</th>
+                        <th>CALL/WHATSAPP</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="customerTableBody">
+                    <tr class="loading-row">
+                        <td colspan="11" class="loading-cell">
+                            <div class="loader"></div>
+                            <p>Loading customers...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Customer Details Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Customer Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Customer details loaded via JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn-primary" onclick="saveCustomer()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+        <div class="empty-icon">📭</div>
+        <h3>No Customers Yet</h3>
+        <p>Your converted leads will appear here. Sync won leads to get started!</p>
+        <button class="btn-primary" onclick="syncWonLeads()">Sync Won Leads</button>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/customers.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CRM Platform - Home{% endblock %}</title>
+
+<!-- base stylesheet -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+<!-- per-page extra head if needed -->
+{% block extra_head %}{% endblock %}
+
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span class="logo-text">Vedaa</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <span class="nav-section-title"></span>
+                <a href="{{ url_for('index') }}" class="nav-item {% if active == 'home' %}active{% endif %}">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="nav-item {% if active == 'dashboard' %}active{% endif %}">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span class="nav-text">Dashboard</span>
+                    <span class="nav-badge">New</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-section-title">Sales</span>
+                <a href="{{ url_for('leads') }}" class="nav-item {% if active == 'leads' %}active{% endif %}">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="nav-text">Leads</span>
+                    <span class="nav-count">124</span>
+                </a>
+                <a href="{{ url_for('pipeline') }}" class="nav-item {% if active == 'pipeline' %}active{% endif %}">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                    <span class="nav-text">Pipeline</span>
+                    <span class="nav-count">47</span>
+                </a>
+                <a href="{{ url_for('customers') }}" class="nav-item {% if active == 'customers' %}active{% endif %}">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <polyline points="17 11 19 13 23 9"></polyline>
+                    </svg>
+                    <span class="nav-text">Customers</span>
+                </a>
+                
+            </div> 
+
+            <div class="nav-section"> 
+                <span class="nav-section-title">Analytics</span>
+                <a href="{{ url_for('reports') }}" class="nav-item {% if active == 'reports' %}active{% endif %}">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="20" x2="12" y2="10"></line>
+                        <line x1="18" y1="20" x2="18" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="16"></line>
+                    </svg>
+                    <span class="nav-text">Reports</span>
+                </a>
+                <a href="{{ url_for('analytics') }}" class="nav-item {% if active == 'analytics' %}active{% endif %}">
+
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <span class="nav-text">Analytics</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-section-title">Tools</span>
+                <a href="{{ url_for('settings') }}" class="nav-item {% if active == 'settings' %}active{% endif %}">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=2" alt="User">
+                </div>
+                <div class="user-info">
+                <div class="user-name">{{ session.get('user', 'Guest') }}</div>
+                <div class="user-role">Sales Manager</div>
+                </div>
+                <button class="user-menu-btn" onclick="location.href='{{ url_for('logout') }}'">
+                Logout
+                </button>
+                <button class="user-menu-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="search-bar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Search leads, customers, deals...">
+                </div>
+            </div>
+            <div class="topbar-right">
+                <button class="topbar-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </button>
+                <button class="topbar-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+                <button class="btn-primary" onclick="location.href='{{ url_for('leads') }}'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    New Lead
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content: this block can be replaced by child templates -->
+        <main class="page-content">
+            {% block content %}
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Welcome to Vedaa Command Center</h1>
+                    <p class="hero-subtitle">Manage your sales pipeline, track leads, and close deals faster than ever before</p>
+                    <div class="hero-actions">
+                        <button class="btn-hero primary" onclick="location.href='{{ url_for('leads') }}'">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add New Lead
+                        </button>
+                        <button class="btn-hero secondary" onclick="location.href='{{ url_for('dashboard') }}'">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            View Dashboard
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-label">Total Leads</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">$2.4M</div>
+                        <div class="stat-label">Revenue</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">68%</div>
+                        <div class="stat-label">Conversion</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">342</div>
+                        <div class="stat-label">Active Deals</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Access Cards -->
+            <section class="quick-access">
+                <h2 class="section-title">Quick Access</h2>
+                <div class="cards-grid">
+                    <div class="access-card" onclick="location.href='{{ url_for('dashboard') }}'">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Analytics Dashboard</h3>
+                            <p>View comprehensive sales analytics, and performance metrics</p>
+                            <div class="card-meta">
+                                <span class="meta-badge">Updated 5m ago</span>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="access-card" onclick="location.href='{{ url_for('leads') }}'">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Lead Management</h3>
+                            <p>Organize, filter, and manage all your leads in one centralized location</p>
+                            <div class="card-meta">
+                                <span class="meta-badge">124 active leads</span>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="access-card" onclick="location.href='{{ url_for('pipeline') }}'">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Sales Pipeline</h3>
+                            <p>Track deals through every stage from prospect to closed won</p>
+                            <div class="card-meta">
+                                <span class="meta-badge">47 deals in progress</span>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="access-card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <line x1="12" y1="20" x2="12" y2="10"></line>
+                                <line x1="18" y1="20" x2="18" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Reports & Analytics</h3>
+                            <p>Generate detailed reports and insights on your sales performance</p>
+                            <div class="card-meta">
+                                <span class="meta-badge">Coming soon</span>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="activity-section">
+                <div class="activity-container">
+                    <div class="activity-header">
+                        <h2 class="section-title">Recent Activity</h2>
+                        <button class="btn-text">View All</button>
+                    </div>
+                    <div class="activity-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #dbeafe; color: #2563eb;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <polyline points="17 11 19 13 23 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">New lead added: <strong>Sarah Johnson</strong></div>
+                                <div class="timeline-meta">TechCorp Inc. • 5 minutes ago</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #dcfce7; color: #16a34a;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Deal closed: <strong>$45,000</strong></div>
+                                <div class="timeline-meta">Enterprise Plan • 2 hours ago</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #fef3c7; color: #d97706;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Follow-up scheduled with <strong>Michael Chen</strong></div>
+                                <div class="timeline-meta">Tomorrow at 2:00 PM • 3 hours ago</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #fce7f3; color: #db2777;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Email campaign sent to <strong>150 leads</strong></div>
+                                <div class="timeline-meta">Q4 Promotion Campaign • 5 hours ago</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #e0e7ff; color: #6366f1;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Sales target achieved: <strong>120%</strong></div>
+                                <div class="timeline-meta">Monthly Goal • Yesterday</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+<!-- base script -->
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+<!-- per-page extra JS if needed -->
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>
