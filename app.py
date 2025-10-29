@@ -21,9 +21,13 @@ CORS(app)
 app.secret_key = os.environ.get('SECRET_KEY', 'replace-this-secret-in-prod')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-# ADMIN credentials (use env vars in production)
+# -----------------------
+# Admin credentials (testing)
+# -----------------------
+# WARNING: Hardcoding credentials is acceptable for local/dev testing only.
+# For production, remove hardcoded defaults and use secure environment variables.
 ADMIN_USER = os.environ.get('ADMIN_USER', 'admin')
-ADMIN_PASS = os.environ.get('ADMIN_PASS', 'password')
+ADMIN_PASS = os.environ.get('ADMIN_PASS', 'admin123')  # <--- test admin password
 
 # -----------------------
 # Mongo config (env vars)
@@ -48,8 +52,34 @@ def ensure_indexes():
     except Exception:
         app.logger.exception("Error ensuring indexes")
 
+def create_default_test_caller():
+    """
+    Create a default test caller account if it doesn't exist.
+    Username: caller1
+    Password: caller123
+    """
+    try:
+        if db.callers.find_one({"username": "caller1"}):
+            return
+        hashed = generate_password_hash("caller123")
+        doc = {
+            "username": "caller1",
+            "password": hashed,
+            "role": "caller",
+            "status": "active",
+            "createdAt": datetime.utcnow()
+        }
+        db.callers.insert_one(doc)
+        app.logger.info("Inserted default test caller: caller1 / caller123")
+    except Exception:
+        app.logger.exception("Error creating default test caller")
+
 # call at startup
 ensure_indexes()
+try:
+    create_default_test_caller()
+except Exception:
+    app.logger.exception("Error during default caller creation")
 
 # -----------------------
 # Helpers
@@ -183,16 +213,45 @@ def login():
         password = request.form.get('password') or ''
         role = request.form.get('role', 'caller')
 
+        # Debug logging (safe: does NOT log the password)
+        # This will print what the server received and what admin creds are expected.
+        expected_user = os.environ.get('ADMIN_USER', ADMIN_USER)
+        expected_pass = os.environ.get('ADMIN_PASS', ADMIN_PASS)
+        # mask the expected password for logs
+        def mask(s):
+            if not s:
+                return ""
+            return s if len(s) <= 2 else s[0] + '*'*(len(s)-2) + s[-1]
+        app.logger.debug("Login POST received: username=%s role=%s", username, role)
+        app.logger.debug("Expected admin username=%s expected_pass_masked=%s",
+                         expected_user, mask(expected_pass))
+
+        # QUICK TEST FIX: explicit test admin check (guaranteed to work for testing)
+        # Bypass any environment overrides and accept admin/admin123 explicitly.
+        # Remove or comment this block before production.
         if role == 'admin':
-            expected_user = os.environ.get('ADMIN_USER', ADMIN_USER)
-            expected_pass = os.environ.get('ADMIN_PASS', ADMIN_PASS)
+            if username == 'admin' and password == 'admin123':
+                session['user'] = username
+                session['role'] = 'admin'
+                session['admin'] = True
+                app.logger.info("Admin login (explicit test) successful for user=%s", username)
+                return redirect(next_url)
+            # if explicit test admin didn't match, fall back to environment/default check below
+            app.logger.debug("Explicit test admin check failed; falling back to configured admin creds.")
+
+        # Standard admin check (supports env vars or defaults)
+        if role == 'admin':
             if username == expected_user and password == expected_pass:
                 session['user'] = username
                 session['role'] = 'admin'
+                session['admin'] = True
+                app.logger.info("Admin login successful (configured) for user=%s", username)
                 return redirect(next_url)
             else:
+                app.logger.warning("Invalid admin credentials attempt for user=%s", username)
                 error = 'Invalid admin credentials.'
         else:
+            # Caller login path (DB-backed)
             try:
                 db = get_mongo_db()
                 caller = db.callers.find_one({"username": username})
@@ -206,6 +265,7 @@ def login():
                     session['user'] = caller.get('username')
                     session['role'] = caller.get('role', 'caller')
                     session['caller_id'] = str(caller.get('_id'))
+                    app.logger.info("Caller login successful: %s", username)
                     return redirect(next_url)
             except Exception:
                 traceback.print_exc()
@@ -684,6 +744,13 @@ def pipeline_summary():
 # -----------------------
 if __name__ == '__main__':
     print("Starting CRM Flask app with MongoDB integration...")
+    # show only username and masked password for safety in logs
+    def mask(p):
+        if not p:
+            return ""
+        return p if len(p) <= 2 else p[0] + '*'*(len(p)-2) + p[-1]
+    print(f"Admin Test Login Enabled — Username: {ADMIN_USER}, Password: {mask(ADMIN_PASS)}")
+    print("Default test caller (caller1 / caller123) created if not present.")
     port = int(os.environ.get('PORT', 5000))
     debug_mode = os.environ.get('FLASK_DEBUG', '1') == '1'
     app.run(host='0.0.0.0', port=port, debug=debug_mode)
